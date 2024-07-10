@@ -1,4 +1,4 @@
-package com.bellande_api.bellande_mobile_android_api;
+package com.bellande_api.bellande_storage_usage;
 
 import org.junit.Test;
 
