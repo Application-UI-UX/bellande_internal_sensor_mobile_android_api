@@ -13,41 +13,42 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- **/
-
+ */
 package com.bellande_api.bellande_network_usage;
 
-import com.google.gson.annotations.SerializedName;
-
-import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Multipart;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
+import retrofit2.http.Url;
 
 public interface bellande_network_usage_api {
-    @Multipart
-    @POST("prediction")
-    Call<BellandeResponse> getBellandeResponse(@Body RequestBody requestBody);
+    @POST
+    Call<BellandeResponse> getBellandeResponse(@Url String url, @Body RequestBody body, @Header("Bellande-Framework-Access-Key") String apiKey);
+
+    @POST
+    Call<BellandeResponse> sendBellandeResponse(@Url String url, @Body RequestBody body, @Header("Bellande-Framework-Access-Key") String apiKey);
 
     class RequestBody {
-        private final MultipartBody.Part image;
+        private final String input;
+        private final String connectivityPasscode;
 
-        public RequestBody(MultipartBody.Part image) {
-            this.image = image;
-        }
-
-        public MultipartBody.Part getImage() {
-            return image;
+        public RequestBody(String input, String connectivityPasscode) {
+            this.input = input;
+            this.connectivityPasscode = connectivityPasscode;
         }
     }
 
     class BellandeResponse {
-        @SerializedName("prediction")
-        public String prediction;
+        private String cpuUsage;
+        private String status;
 
-        @SerializedName("confidence")
-        public double confidence;
+        public String getCpuUsage() {
+            return cpuUsage;
+        }
+
+        public String getStatus() {
+            return status;
+        }
     }
 }
