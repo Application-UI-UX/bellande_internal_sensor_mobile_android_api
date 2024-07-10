@@ -48,10 +48,10 @@ public class bellande_ram_usage_service {
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getCpuUsage();
             } else {
-                throw new RuntimeException("Error getting NETWORK usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting RAM usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting NETWORK usage: " + e.getMessage());
+            throw new RuntimeException("Error getting RAM usage: " + e.getMessage());
         }
     }
 
@@ -63,10 +63,10 @@ public class bellande_ram_usage_service {
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getStatus();
             } else {
-                throw new RuntimeException("Error sending NETWORK usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error sending RAM usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error sending NETWORK usage: " + e.getMessage());
+            throw new RuntimeException("Error sending RAM usage: " + e.getMessage());
         }
     }
 }
