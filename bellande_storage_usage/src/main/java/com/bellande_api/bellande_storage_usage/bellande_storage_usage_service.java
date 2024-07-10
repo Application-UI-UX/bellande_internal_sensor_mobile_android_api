@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+ **/
 
 package com.bellande_api.bellande_storage_usage;
 
@@ -27,33 +27,46 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_storage_usage_usage_service {
-    private final bellande_storage_usage_usage_api bellande_storage_usage_usage_api;
+public class bellande_storage_usage_service {
+    private final bellande_storage_usage_api storageUsageApi;
+    private final String apiAccessKey;
+    private final String inputEndpoint;
+    private final String outputEndpoint;
 
-    public bellande_storage_usage_usage_service(String apiUrl, String endpointPath, String apiAccessKey, bellande_storage_usage_usage_api bellande_storage_usage_usage_api) {
-        this.bellande_storage_usage_usage_api = bellande_storage_usage_usage_api;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(apiUrl + endpointPath)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        retrofit.create(bellande_storage_usage_usage_api.class);
+    public bellande_storage_usage_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_storage_usage_api storageUsageApi) {
+        this.storageUsageApi = storageUsageApi;
+        this.apiAccessKey = apiAccessKey;
+        this.inputEndpoint = inputEndpoint;
+        this.outputEndpoint = outputEndpoint;
     }
 
-    public bellande_storage_usage_usage_api.BellandeResponse getPrediction(File pointCloudFile) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), pointCloudFile.getAbsolutePath());
-        MultipartBody.Part pointCloudPart = MultipartBody.Part.createFormData("pointCloud", pointCloudFile.getName(), requestBody);
+    public String getStorageUsage(String connectivityPasscode) {
+        bellande_storage_usage_api.RequestBody apiRequestBody = new bellande_storage_usage_api.RequestBody("get_storage_usage", connectivityPasscode);
 
         try {
-            Response<bellande_storage_usage_usage_api.BellandeResponse> response = bellande_storage_usage_usage_api.getPrediction(pointCloudPart).execute();
+            Response<bellande_storage_usage_api.BellandeResponse> response = storageUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
-                return response.body();
+                return response.body().getCpuUsage();
             } else {
-                throw new RuntimeException("Error getting prediction: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting NETWORK usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting prediction: " + e.getMessage());
+            throw new RuntimeException("Error getting NETWORK usage: " + e.getMessage());
+        }
+    }
+
+    public String sendStorageUsage(String cpuUsage, String connectivityPasscode) {
+        bellande_storage_usage_api.RequestBody apiRequestBody = new bellande_storage_usage_api.RequestBody(cpuUsage, connectivityPasscode);
+
+        try {
+            Response<bellande_storage_usage_api.BellandeResponse> response = storageUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return response.body().getStatus();
+            } else {
+                throw new RuntimeException("Error sending NETWORK usage: " + response.code() + " - " + response.message());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error sending NETWORK usage: " + e.getMessage());
         }
     }
 }

@@ -28,34 +28,45 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class bellande_ram_usage_service {
-    private final bellande_ram_usage_api bellande_ram_usage_api;
+    private final bellande_ram_usage_api ramUsageApi;
+    private final String apiAccessKey;
+    private final String inputEndpoint;
+    private final String outputEndpoint;
 
-    public bellande_ram_usage_service(String apiUrl, String endpointPath, String apiAccessKey, bellande_ram_usage_api bellande_ram_usage_api) {
-        this.bellande_ram_usage_api = bellande_ram_usage_api;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(apiUrl + endpointPath)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        retrofit.create(bellande_ram_usage_api.class);
+    public bellande_ram_usage_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_ram_usage_api ramUsageApi) {
+        this.ramUsageApi = ramUsageApi;
+        this.apiAccessKey = apiAccessKey;
+        this.inputEndpoint = inputEndpoint;
+        this.outputEndpoint = outputEndpoint;
     }
 
-    public bellande_ram_usage_api.BellandeResponse getPrediction(String inputText) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), inputText);
-        bellande_ram_usage_api.RequestBody apiRequestBody = new bellande_ram_usage_api.RequestBody(
-                inputText
-        );
+    public String getRamUsage(String connectivityPasscode) {
+        bellande_ram_usage_api.RequestBody apiRequestBody = new bellande_ram_usage_api.RequestBody("get_ram_usage", connectivityPasscode);
 
         try {
-            Response<bellande_ram_usage_api.BellandeResponse> response = bellande_ram_usage_api.getBellandeResponse(apiRequestBody).execute();
+            Response<bellande_ram_usage_api.BellandeResponse> response = ramUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
-                return response.body();
+                return response.body().getCpuUsage();
             } else {
-                throw new RuntimeException("Error getting prediction: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting NETWORK usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting prediction: " + e.getMessage());
+            throw new RuntimeException("Error getting NETWORK usage: " + e.getMessage());
+        }
+    }
+
+    public String sendRamUsage(String cpuUsage, String connectivityPasscode) {
+        bellande_ram_usage_api.RequestBody apiRequestBody = new bellande_ram_usage_api.RequestBody(cpuUsage, connectivityPasscode);
+
+        try {
+            Response<bellande_ram_usage_api.BellandeResponse> response = ramUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return response.body().getStatus();
+            } else {
+                throw new RuntimeException("Error sending NETWORK usage: " + response.code() + " - " + response.message());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error sending NETWORK usage: " + e.getMessage());
         }
     }
 }
