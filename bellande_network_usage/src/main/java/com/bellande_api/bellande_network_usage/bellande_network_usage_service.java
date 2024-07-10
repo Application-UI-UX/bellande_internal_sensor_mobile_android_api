@@ -28,34 +28,45 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class bellande_network_usage_service {
-    private final bellande_network_usage_api bellande_network_usage_api;
+    private final bellande_network_usage_api networkUsageApi;
+    private final String apiAccessKey;
+    private final String inputEndpoint;
+    private final String outputEndpoint;
 
-    public bellande_network_usage_service(String apiUrl, String endpointPath, String apiAccessKey, bellande_network_usage_api bellande_network_usage_api) {
-        this.bellande_network_usage_api = bellande_network_usage_api;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(apiUrl + endpointPath)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        retrofit.create(bellande_network_usage_api.class);
+    public bellande_network_usage_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_network_usage_api networkUsageApi) {
+        this.networkUsageApi = networkUsageApi;
+        this.apiAccessKey = apiAccessKey;
+        this.inputEndpoint = inputEndpoint;
+        this.outputEndpoint = outputEndpoint;
     }
 
-    public bellande_network_usage_api.BellandeResponse getPrediction(File imageFile) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile.getAbsolutePath());
-        bellande_network_usage_api.RequestBody apiRequestBody = new bellande_network_usage_api.RequestBody(
-                MultipartBody.Part.createFormData("image", imageFile.getName(), requestBody)
-        );
+    public String getNetworkUsage(String connectivityPasscode) {
+        bellande_network_usage_api.RequestBody apiRequestBody = new bellande_network_usage_api.RequestBody("get_network_usage", connectivityPasscode);
 
         try {
-            Response<bellande_network_usage_api.BellandeResponse> response = bellande_network_usage_api.getBellandeResponse(apiRequestBody).execute();
+            Response<bellande_network_usage_api.BellandeResponse> response = networkUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
-                return response.body();
+                return response.body().getCpuUsage();
             } else {
-                throw new RuntimeException("Error getting prediction: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting NETWORK usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting prediction: " + e.getMessage());
+            throw new RuntimeException("Error getting NETWORK usage: " + e.getMessage());
+        }
+    }
+
+    public String sendNetworkUsage(String cpuUsage, String connectivityPasscode) {
+        bellande_network_usage_api.RequestBody apiRequestBody = new bellande_network_usage_api.RequestBody(cpuUsage, connectivityPasscode);
+
+        try {
+            Response<bellande_network_usage_api.BellandeResponse> response = networkUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return response.body().getStatus();
+            } else {
+                throw new RuntimeException("Error sending NETWORK usage: " + response.code() + " - " + response.message());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error sending NETWORK usage: " + e.getMessage());
         }
     }
 }
