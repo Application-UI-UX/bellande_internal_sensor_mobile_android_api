@@ -13,43 +13,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-package com.bellande_api.bellande_cpu_usage;
+ **/
+package com.bellande_api.bellande_storage_usage;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bellande_api.bellande_storage_usage.bellande_storage_usage_usage_service;
+import com.bellande_api.bellande_storage_usage.bellande_storage_usage_usage_api;
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.reflect.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Map;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_cpu_usage_base_activity extends AppCompatActivity {
-    protected bellande_cpu_usage_base_service cpuUsageService;
-    protected String connectivityPasscode;
+public class bellande_storage_usage_usage_activity extends AppCompatActivity {
+    private bellande_storage_usage_usage_service bellande_storage_usage_usage_service;
 
-    public bellande_cpu_usage_base_activity(Context context) {
+    public bellande_storage_usage_usage_activity(Context context) {
         Map<String, Object> config = loadConfigFromFile(context);
         String apiUrl = (String) config.get("url");
-        Map<String, String> endpointPaths = (Map<String, String>) config.get("endpoint_path");
-        String inputEndpoint = endpointPaths.get("input_data");
-        String outputEndpoint = endpointPaths.get("output_data");
+        String endpointPath = (String) ((Map<String, Object>) config.get("endpoint_path")).get("prediction");
         String apiAccessKey = (String) config.get("Bellande_Framework_Access_Key");
-        this.connectivityPasscode = (String) config.get("connectivity_passcode");
 
-        bellande_cpu_usage_base_api cpuUsageApi = new Retrofit.Builder()
-                .baseUrl(apiUrl)
+        bellande_storage_usage_usage_api bellande_storage_usage_usage_api = new Retrofit.Builder()
+                .baseUrl(apiUrl + endpointPath)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(bellande_cpu_usage_base_api.class);
+                .create(bellande_storage_usage_usage_api.class);
 
-        cpuUsageService = new bellande_cpu_usage_base_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, cpuUsageApi);
+        bellande_storage_usage_usage_service = new bellande_storage_usage_usage_service(apiUrl, endpointPath, apiAccessKey, bellande_storage_usage_usage_api);
     }
 
     @SuppressLint("LongLogTag")
@@ -57,10 +60,10 @@ public class bellande_cpu_usage_base_activity extends AppCompatActivity {
         try {
             InputStream inputStream = context.getAssets().open("configs.json");
             InputStreamReader reader = new InputStreamReader(inputStream);
-            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Type type = new TypeToken<Map<String, Object>>() {}.getType();
             return new Gson().fromJson(reader, type);
         } catch (IOException e) {
-            Log.e("bellande_cpu_usage_base_activity", "Error reading config file: " + e.getMessage());
+            Log.e("bellande_network_usage_activity", "Error reading config file: " + e.getMessage());
         }
         return null;
     }
