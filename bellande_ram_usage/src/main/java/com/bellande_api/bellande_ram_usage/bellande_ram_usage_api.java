@@ -13,33 +13,42 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- **/
-
+ */
 package com.bellande_api.bellande_ram_usage;
 
-import com.google.gson.annotations.SerializedName;
-
-import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Multipart;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
+import retrofit2.http.Url;
 
 public interface bellande_ram_usage_api {
-    @POST("2d")
-    Call<BellandeResponse> getBellandeResponse(@Body RequestBody requestBody);
+    @POST
+    Call<BellandeResponse> getBellandeResponse(@Url String url, @Body RequestBody body, @Header("Bellande-Framework-Access-Key") String apiKey);
+
+    @POST
+    Call<BellandeResponse> sendBellandeResponse(@Url String url, @Body RequestBody body, @Header("Bellande-Framework-Access-Key") String apiKey);
 
     class RequestBody {
-        private final String inputText;
+        private final String input;
+        private final String connectivityPasscode;
 
-        public RequestBody(String inputText) { this.inputText = inputText; }
-
-        public String getString() { return inputText; }
+        public RequestBody(String input, String connectivityPasscode) {
+            this.input = input;
+            this.connectivityPasscode = connectivityPasscode;
+        }
     }
 
     class BellandeResponse {
-        @SerializedName("response")
-        public String response;
+        private String cpuUsage;
+        private String status;
+
+        public String getCpuUsage() {
+            return cpuUsage;
+        }
+
+        public String getStatus() {
+            return status;
+        }
     }
 }
