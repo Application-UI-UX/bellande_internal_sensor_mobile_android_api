@@ -19,51 +19,48 @@ package com.bellande_api.bellande_ram_usage;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.bellande_api.bellande_ram_usage.bellande_ram_usage_service;
-import com.bellande_api.bellande_ram_usage.bellande_ram_usage_api;
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.reflect.*;
-
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Map;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class bellande_ram_usage_activity extends AppCompatActivity {
-    private bellande_ram_usage_service bellande_ram_usage_service;
+    protected bellande_ram_usage_service ramUsageService;
+    protected String connectivityPasscode;
 
     public bellande_ram_usage_activity(Context context) {
         Map<String, Object> config = loadConfigFromFile(context);
         String apiUrl = (String) config.get("url");
-        String endpointPath = (String) ((Map<String, Object>) config.get("endpoint_path")).get("2d");
+        Map<String, String> endpointPaths = (Map<String, String>) config.get("endpoint_path");
+        String inputEndpoint = endpointPaths.get("input_data");
+        String outputEndpoint = endpointPaths.get("output_data");
         String apiAccessKey = (String) config.get("Bellande_Framework_Access_Key");
+        this.connectivityPasscode = (String) config.get("connectivity_passcode");
 
-        bellande_ram_usage_api bellande_ram_usage_api = new Retrofit.Builder()
-                .baseUrl(apiUrl + endpointPath)
+        bellande_ram_usage_api ramUsageApi = new Retrofit.Builder()
+                .baseUrl(apiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(bellande_ram_usage_api.class);
 
-        bellande_ram_usage_service = new bellande_ram_usage_service(apiUrl, endpointPath, apiAccessKey, bellande_ram_usage_api);
+        ramUsageService = new bellande_ram_usage_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, ramUsageApi);
     }
 
     @SuppressLint("LongLogTag")
-    Map<String, Object> loadConfigFromFile(Context context) {
+    private Map<String, Object> loadConfigFromFile(Context context) {
         try {
             InputStream inputStream = context.getAssets().open("configs.json");
             InputStreamReader reader = new InputStreamReader(inputStream);
-            Type type = new TypeToken<Map<String, Object>>() {}.getType();
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
             return new Gson().fromJson(reader, type);
         } catch (IOException e) {
-            Log.e("bellande_ram_usage_activity", "Error reading config file: " + e.getMessage());
+            Log.e("bellande_ram_usage_base_activity", "Error reading config file: " + e.getMessage());
         }
         return null;
     }
