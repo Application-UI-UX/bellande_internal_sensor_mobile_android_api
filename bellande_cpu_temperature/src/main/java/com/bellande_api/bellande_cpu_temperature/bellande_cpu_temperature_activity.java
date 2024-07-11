@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- **/
-package com.bellande_api.bellande_storage_usage;
+ */
+package com.bellande_api.bellande_cpu_temperature;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -30,11 +30,11 @@ import java.util.Map;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_storage_usage_activity extends AppCompatActivity {
-    protected bellande_storage_usage_service storageUsageService;
+public class bellande_cpu_temperature_base_activity extends AppCompatActivity {
+    protected bellande_cpu_temperature_base_service cpuUsageService;
     protected String connectivityPasscode;
 
-    public bellande_storage_usage_activity(Context context) {
+    public bellande_cpu_temperature_base_activity(Context context) {
         Map<String, Object> config = loadConfigFromFile(context);
         String apiUrl = (String) config.get("url");
         Map<String, String> endpointPaths = (Map<String, String>) config.get("endpoint_path");
@@ -43,13 +43,13 @@ public class bellande_storage_usage_activity extends AppCompatActivity {
         String apiAccessKey = (String) config.get("Bellande_Framework_Access_Key");
         this.connectivityPasscode = (String) config.get("connectivity_passcode");
 
-        bellande_storage_usage_api storageUsageApi = new Retrofit.Builder()
+        bellande_cpu_temperature_base_api cpuUsageApi = new Retrofit.Builder()
                 .baseUrl(apiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(bellande_storage_usage_api.class);
+                .create(bellande_cpu_temperature_base_api.class);
 
-        storageUsageService = new bellande_storage_usage_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, storageUsageApi);
+        cpuUsageService = new bellande_cpu_temperature_base_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, cpuUsageApi);
     }
 
     @SuppressLint("LongLogTag")
@@ -60,7 +60,7 @@ public class bellande_storage_usage_activity extends AppCompatActivity {
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
             return new Gson().fromJson(reader, type);
         } catch (IOException e) {
-            Log.e("bellande_storage_usage_base_activity", "Error reading config file: " + e.getMessage());
+            Log.e("bellande_cpu_temperature_base_activity", "Error reading config file: " + e.getMessage());
         }
         return null;
     }
