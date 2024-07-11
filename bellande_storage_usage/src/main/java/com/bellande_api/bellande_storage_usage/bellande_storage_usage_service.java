@@ -46,27 +46,27 @@ public class bellande_storage_usage_service {
         try {
             Response<bellande_storage_usage_api.BellandeResponse> response = storageUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
-                return response.body().getCpuUsage();
+                return response.body().getStorageUsage();
             } else {
-                throw new RuntimeException("Error getting STORAGE usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting STORAGE USAGE: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting STORAGE usage: " + e.getMessage());
+            throw new RuntimeException("Error getting STORAGE USAGE: " + e.getMessage());
         }
     }
 
-    public String sendStorageUsage(String cpuUsage, String connectivityPasscode) {
-        bellande_storage_usage_api.RequestBody apiRequestBody = new bellande_storage_usage_api.RequestBody(cpuUsage, connectivityPasscode);
+    public String sendStorageUsage(String storageUsage, String connectivityPasscode) {
+        bellande_storage_usage_api.RequestBody apiRequestBody = new bellande_storage_usage_api.RequestBody(storageUsage, connectivityPasscode);
 
         try {
             Response<bellande_storage_usage_api.BellandeResponse> response = storageUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getStatus();
             } else {
-                throw new RuntimeException("Error sending STORAGE usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error sending STORAGE USAGE: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error sending STORAGE usage: " + e.getMessage());
+            throw new RuntimeException("Error sending STORAGE USAGE: " + e.getMessage());
         }
     }
 }

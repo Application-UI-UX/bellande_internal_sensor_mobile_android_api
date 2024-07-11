@@ -27,13 +27,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_cpu_usage_base_service {
-    private final bellande_cpu_usage_base_api cpuUsageApi;
+public class bellande_cpu_usage_service {
+    private final bellande_cpu_usage_api cpuUsageApi;
     private final String apiAccessKey;
     private final String inputEndpoint;
     private final String outputEndpoint;
 
-    public bellande_cpu_usage_base_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_cpu_usage_base_api cpuUsageApi) {
+    public bellande_cpu_usage_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_cpu_usage_api cpuUsageApi) {
         this.cpuUsageApi = cpuUsageApi;
         this.apiAccessKey = apiAccessKey;
         this.inputEndpoint = inputEndpoint;
@@ -41,32 +41,32 @@ public class bellande_cpu_usage_base_service {
     }
 
     public String getCpuUsage(String connectivityPasscode) {
-        bellande_cpu_usage_base_api.RequestBody apiRequestBody = new bellande_cpu_usage_base_api.RequestBody("get_cpu_usage", connectivityPasscode);
+        bellande_cpu_usage_api.RequestBody apiRequestBody = new bellande_cpu_usage_api.RequestBody("get_cpu_usage", connectivityPasscode);
 
         try {
-            Response<bellande_cpu_usage_base_api.BellandeResponse> response = cpuUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
+            Response<bellande_cpu_usage_api.BellandeResponse> response = cpuUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getCpuUsage();
             } else {
-                throw new RuntimeException("Error getting CPU usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting CPU USAGE: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting CPU usage: " + e.getMessage());
+            throw new RuntimeException("Error getting CPU USAGE: " + e.getMessage());
         }
     }
 
     public String sendCpuUsage(String cpuUsage, String connectivityPasscode) {
-        bellande_cpu_usage_base_api.RequestBody apiRequestBody = new bellande_cpu_usage_base_api.RequestBody(cpuUsage, connectivityPasscode);
+        bellande_cpu_usage_api.RequestBody apiRequestBody = new bellande_cpu_usage_api.RequestBody(cpuUsage, connectivityPasscode);
 
         try {
-            Response<bellande_cpu_usage_base_api.BellandeResponse> response = cpuUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
+            Response<bellande_cpu_usage_api.BellandeResponse> response = cpuUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getStatus();
             } else {
-                throw new RuntimeException("Error sending CPU usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error sending CPU USAGE: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error sending CPU usage: " + e.getMessage());
+            throw new RuntimeException("Error sending CPU USAGE: " + e.getMessage());
         }
     }
 }

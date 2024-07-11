@@ -40,11 +40,11 @@ public interface bellande_network_usage_api {
     }
 
     class BellandeResponse {
-        private String cpuUsage;
+        private String networkUsage;
         private String status;
 
-        public String getCpuUsage() {
-            return cpuUsage;
+        public String getNetworkUsage() {
+            return networkUsage;
         }
 
         public String getStatus() {

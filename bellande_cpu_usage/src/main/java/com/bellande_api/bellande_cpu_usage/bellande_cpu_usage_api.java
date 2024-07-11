@@ -22,7 +22,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
 
-public interface bellande_cpu_usage_base_api {
+public interface bellande_cpu_usage_api {
     @POST
     Call<BellandeResponse> getBellandeResponse(@Url String url, @Body RequestBody body, @Header("Bellande-Framework-Access-Key") String apiKey);
 

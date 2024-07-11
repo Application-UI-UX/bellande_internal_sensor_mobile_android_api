@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.bellande_api.bellande_cpu_temperature;
+package com.bellande_api.bellande_internal_temperature;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -30,11 +30,11 @@ import java.util.Map;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_cpu_temperature_activity extends AppCompatActivity {
-    protected bellande_cpu_temperature_service cpuTemperatureService;
+public class bellande_internal_temperature_activity extends AppCompatActivity {
+    protected bellande_internal_temperature_service internalTemperatureService;
     protected String connectivityPasscode;
 
-    public bellande_cpu_temperature_activity(Context context) {
+    public bellande_internal_temperature_activity(Context context) {
         Map<String, Object> config = loadConfigFromFile(context);
         String apiUrl = (String) config.get("url");
         Map<String, String> endpointPaths = (Map<String, String>) config.get("endpoint_path");
@@ -43,13 +43,13 @@ public class bellande_cpu_temperature_activity extends AppCompatActivity {
         String apiAccessKey = (String) config.get("Bellande_Framework_Access_Key");
         this.connectivityPasscode = (String) config.get("connectivity_passcode");
 
-        bellande_cpu_temperature_api cpuUsageApi = new Retrofit.Builder()
+        bellande_internal_temperature_api internalTemperatureApi = new Retrofit.Builder()
                 .baseUrl(apiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(bellande_cpu_temperature_api.class);
+                .create(bellande_internal_temperature_api.class);
 
-        cpuTemperatureService = new bellande_cpu_temperature_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, cpuUsageApi);
+        internalTemperatureService = new bellande_internal_temperature_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, internalTemperatureApi);
     }
 
     @SuppressLint("LongLogTag")
@@ -60,7 +60,7 @@ public class bellande_cpu_temperature_activity extends AppCompatActivity {
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
             return new Gson().fromJson(reader, type);
         } catch (IOException e) {
-            Log.e("bellande_cpu_temperature_activity", "Error reading config file: " + e.getMessage());
+            Log.e("bellande_internal_temperature_activity", "Error reading config file: " + e.getMessage());
         }
         return null;
     }

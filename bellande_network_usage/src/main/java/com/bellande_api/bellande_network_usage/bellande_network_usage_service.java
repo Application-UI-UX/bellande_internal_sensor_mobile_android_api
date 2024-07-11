@@ -46,27 +46,27 @@ public class bellande_network_usage_service {
         try {
             Response<bellande_network_usage_api.BellandeResponse> response = networkUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
-                return response.body().getCpuUsage();
+                return response.body().getNetworkUsage();
             } else {
-                throw new RuntimeException("Error getting NETWORK usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting NETWORK USAGE: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting NETWORK usage: " + e.getMessage());
+            throw new RuntimeException("Error getting NETWORK USAGE: " + e.getMessage());
         }
     }
 
-    public String sendNetworkUsage(String cpuUsage, String connectivityPasscode) {
-        bellande_network_usage_api.RequestBody apiRequestBody = new bellande_network_usage_api.RequestBody(cpuUsage, connectivityPasscode);
+    public String sendNetworkUsage(String networkUsage, String connectivityPasscode) {
+        bellande_network_usage_api.RequestBody apiRequestBody = new bellande_network_usage_api.RequestBody(networkUsage, connectivityPasscode);
 
         try {
             Response<bellande_network_usage_api.BellandeResponse> response = networkUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getStatus();
             } else {
-                throw new RuntimeException("Error sending NETWORK usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error sending NETWORK USAGE: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error sending NETWORK usage: " + e.getMessage());
+            throw new RuntimeException("Error sending NETWORK USAGE: " + e.getMessage());
         }
     }
 }

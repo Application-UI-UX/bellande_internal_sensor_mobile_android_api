@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.bellande_api.bellande_ram_usage;
+package com.bellande_api.bellande_internal_temperature;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,7 +22,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
 
-public interface bellande_ram_usage_api {
+public interface bellande_internal_temperature_api {
     @POST
     Call<BellandeResponse> getBellandeResponse(@Url String url, @Body RequestBody body, @Header("Bellande-Framework-Access-Key") String apiKey);
 
@@ -40,11 +40,11 @@ public interface bellande_ram_usage_api {
     }
 
     class BellandeResponse {
-        private String ramUsage;
+        private String internalTemperature;
         private String status;
 
-        public String getRamUsage() {
-            return ramUsage;
+        public String getInternalTemperature() {
+            return internalTemperature;
         }
 
         public String getStatus() {

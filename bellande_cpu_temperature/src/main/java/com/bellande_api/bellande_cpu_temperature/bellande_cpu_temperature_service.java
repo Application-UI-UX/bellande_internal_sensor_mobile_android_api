@@ -27,46 +27,46 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_cpu_temperature_base_service {
-    private final bellande_cpu_temperature_base_api cpuUsageApi;
+public class bellande_cpu_temperature_service {
+    private final bellande_cpu_temperature_api cpuTemperatureApi;
     private final String apiAccessKey;
     private final String inputEndpoint;
     private final String outputEndpoint;
 
-    public bellande_cpu_temperature_base_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_cpu_temperature_base_api cpuUsageApi) {
-        this.cpuUsageApi = cpuUsageApi;
+    public bellande_cpu_temperature_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_cpu_temperature_api cpuTemperatureApi) {
+        this.cpuTemperatureApi = cpuTemperatureApi;
         this.apiAccessKey = apiAccessKey;
         this.inputEndpoint = inputEndpoint;
         this.outputEndpoint = outputEndpoint;
     }
 
     public String getCpuTemperature(String connectivityPasscode) {
-        bellande_cpu_temperature_base_api.RequestBody apiRequestBody = new bellande_cpu_temperature_base_api.RequestBody("get_cpu_temperature", connectivityPasscode);
+        bellande_cpu_temperature_api.RequestBody apiRequestBody = new bellande_cpu_temperature_api.RequestBody("get_cpu_temperature", connectivityPasscode);
 
         try {
-            Response<bellande_cpu_temperature_base_api.BellandeResponse> response = cpuUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
+            Response<bellande_cpu_temperature_api.BellandeResponse> response = cpuTemperatureApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getCpuTemperature();
             } else {
-                throw new RuntimeException("Error getting CPU_TEMPERATURE_TEMPERATURE usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting CPU TEMPERATURE usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting CPU_TEMPERATURE_TEMPERATURE usage: " + e.getMessage());
+            throw new RuntimeException("Error getting CPU TEMPERATURE usage: " + e.getMessage());
         }
     }
 
-    public String sendCpuTemperature(String cpuUsage, String connectivityPasscode) {
-        bellande_cpu_temperature_base_api.RequestBody apiRequestBody = new bellande_cpu_temperature_base_api.RequestBody(cpuUsage, connectivityPasscode);
+    public String sendCpuTemperature(String cpuTemperature, String connectivityPasscode) {
+        bellande_cpu_temperature_api.RequestBody apiRequestBody = new bellande_cpu_temperature_api.RequestBody(cpuTemperature, connectivityPasscode);
 
         try {
-            Response<bellande_cpu_temperature_base_api.BellandeResponse> response = cpuUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
+            Response<bellande_cpu_temperature_api.BellandeResponse> response = cpuTemperatureApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getStatus();
             } else {
-                throw new RuntimeException("Error sending CPU_TEMPERATURE_TEMPERATURE usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error sending CPU TEMPERATURE TEMPERATURE usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error sending CPU_TEMPERATURE_TEMPERATURE usage: " + e.getMessage());
+            throw new RuntimeException("Error sending CPU TEMPERATURE TEMPERATURE usage: " + e.getMessage());
         }
     }
 }
