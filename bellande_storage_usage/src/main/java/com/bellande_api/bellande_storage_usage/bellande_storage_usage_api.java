@@ -40,11 +40,11 @@ public interface bellande_storage_usage_api {
     }
 
     class BellandeResponse {
-        private String cpuUsage;
+        private String storageUsage;
         private String status;
 
-        public String getCpuUsage() {
-            return cpuUsage;
+        public String getStorageUsage() {
+            return storageUsage;
         }
 
         public String getStatus() {

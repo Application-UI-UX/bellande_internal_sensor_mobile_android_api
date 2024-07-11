@@ -27,46 +27,46 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_internal_temperature_base_service {
-    private final bellande_internal_temperature_base_api cpuUsageApi;
+public class bellande_internal_temperature_service {
+    private final bellande_internal_temperature_api internalTemperatureApi;
     private final String apiAccessKey;
     private final String inputEndpoint;
     private final String outputEndpoint;
 
-    public bellande_internal_temperature_base_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_internal_temperature_base_api cpuUsageApi) {
-        this.cpuUsageApi = cpuUsageApi;
+    public bellande_internal_temperature_service(String apiUrl, String inputEndpoint, String outputEndpoint, String apiAccessKey, bellande_internal_temperature_api internalTemperatureApi) {
+        this.internalTemperatureApi = internalTemperatureApi;
         this.apiAccessKey = apiAccessKey;
         this.inputEndpoint = inputEndpoint;
         this.outputEndpoint = outputEndpoint;
     }
 
     public String getInternalTemperature(String connectivityPasscode) {
-        bellande_internal_temperature_base_api.RequestBody apiRequestBody = new bellande_internal_temperature_base_api.RequestBody("get_internal_temperature", connectivityPasscode);
+        bellande_internal_temperature_api.RequestBody apiRequestBody = new bellande_internal_temperature_api.RequestBody("get_internal_temperature", connectivityPasscode);
 
         try {
-            Response<bellande_internal_temperature_base_api.BellandeResponse> response = cpuUsageApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
+            Response<bellande_internal_temperature_api.BellandeResponse> response = internalTemperatureApi.getBellandeResponse(inputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getInternalTemperature();
             } else {
-                throw new RuntimeException("Error getting INTERNAL_TEMPERATURE usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error getting INTERNAL TEMPERATURE usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error getting INTERNAL_TEMPERATURE usage: " + e.getMessage());
+            throw new RuntimeException("Error getting INTERNAL TEMPERATURE usage: " + e.getMessage());
         }
     }
 
-    public String sendInternalTemperature(String cpuUsage, String connectivityPasscode) {
-        bellande_internal_temperature_base_api.RequestBody apiRequestBody = new bellande_internal_temperature_base_api.RequestBody(cpuUsage, connectivityPasscode);
+    public String sendInternalTemperature(String internalTemperature, String connectivityPasscode) {
+        bellande_internal_temperature_api.RequestBody apiRequestBody = new bellande_internal_temperature_api.RequestBody(internalTemperature, connectivityPasscode);
 
         try {
-            Response<bellande_internal_temperature_base_api.BellandeResponse> response = cpuUsageApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
+            Response<bellande_internal_temperature_api.BellandeResponse> response = internalTemperatureApi.sendBellandeResponse(outputEndpoint, apiRequestBody, apiAccessKey).execute();
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getStatus();
             } else {
-                throw new RuntimeException("Error sending INTERNAL_TEMPERATURE usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error sending INTERNAL TEMPERATURE usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error sending INTERNAL_TEMPERATURE usage: " + e.getMessage());
+            throw new RuntimeException("Error sending INTERNAL TEMPERATURE usage: " + e.getMessage());
         }
     }
 }

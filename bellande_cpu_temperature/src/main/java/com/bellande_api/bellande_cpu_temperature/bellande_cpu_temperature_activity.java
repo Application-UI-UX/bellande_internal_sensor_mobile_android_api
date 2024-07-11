@@ -30,11 +30,11 @@ import java.util.Map;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_cpu_temperature_base_activity extends AppCompatActivity {
-    protected bellande_cpu_temperature_base_service cpuUsageService;
+public class bellande_cpu_temperature_activity extends AppCompatActivity {
+    protected bellande_cpu_temperature_service cpuTemperatureService;
     protected String connectivityPasscode;
 
-    public bellande_cpu_temperature_base_activity(Context context) {
+    public bellande_cpu_temperature_activity(Context context) {
         Map<String, Object> config = loadConfigFromFile(context);
         String apiUrl = (String) config.get("url");
         Map<String, String> endpointPaths = (Map<String, String>) config.get("endpoint_path");
@@ -43,13 +43,13 @@ public class bellande_cpu_temperature_base_activity extends AppCompatActivity {
         String apiAccessKey = (String) config.get("Bellande_Framework_Access_Key");
         this.connectivityPasscode = (String) config.get("connectivity_passcode");
 
-        bellande_cpu_temperature_base_api cpuUsageApi = new Retrofit.Builder()
+        bellande_cpu_temperature_api cpuUsageApi = new Retrofit.Builder()
                 .baseUrl(apiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(bellande_cpu_temperature_base_api.class);
+                .create(bellande_cpu_temperature_api.class);
 
-        cpuUsageService = new bellande_cpu_temperature_base_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, cpuUsageApi);
+        cpuTemperatureService = new bellande_cpu_temperature_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, cpuUsageApi);
     }
 
     @SuppressLint("LongLogTag")
@@ -60,7 +60,7 @@ public class bellande_cpu_temperature_base_activity extends AppCompatActivity {
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
             return new Gson().fromJson(reader, type);
         } catch (IOException e) {
-            Log.e("bellande_cpu_temperature_base_activity", "Error reading config file: " + e.getMessage());
+            Log.e("bellande_cpu_temperature_activity", "Error reading config file: " + e.getMessage());
         }
         return null;
     }

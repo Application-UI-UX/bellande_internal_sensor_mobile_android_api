@@ -60,7 +60,7 @@ public class bellande_ram_usage_activity extends AppCompatActivity {
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
             return new Gson().fromJson(reader, type);
         } catch (IOException e) {
-            Log.e("bellande_ram_usage_base_activity", "Error reading config file: " + e.getMessage());
+            Log.e("bellande_ram_usage__activity", "Error reading config file: " + e.getMessage());
         }
         return null;
     }

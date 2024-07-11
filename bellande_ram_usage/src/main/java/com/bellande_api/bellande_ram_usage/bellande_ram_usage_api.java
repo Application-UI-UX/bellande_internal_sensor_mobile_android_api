@@ -40,11 +40,11 @@ public interface bellande_ram_usage_api {
     }
 
     class BellandeResponse {
-        private String cpuUsage;
+        private String ramUsage;
         private String status;
 
-        public String getCpuUsage() {
-            return cpuUsage;
+        public String getRamUsage() {
+            return ramUsage;
         }
 
         public String getStatus() {

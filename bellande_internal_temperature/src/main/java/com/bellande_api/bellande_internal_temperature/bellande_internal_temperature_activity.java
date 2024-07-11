@@ -30,11 +30,11 @@ import java.util.Map;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class bellande_internal_temperature_base_activity extends AppCompatActivity {
-    protected bellande_internal_temperature_base_service cpuUsageService;
+public class bellande_internal_temperature_activity extends AppCompatActivity {
+    protected bellande_internal_temperature_service internalTemperatureService;
     protected String connectivityPasscode;
 
-    public bellande_internal_temperature_base_activity(Context context) {
+    public bellande_internal_temperature_activity(Context context) {
         Map<String, Object> config = loadConfigFromFile(context);
         String apiUrl = (String) config.get("url");
         Map<String, String> endpointPaths = (Map<String, String>) config.get("endpoint_path");
@@ -43,13 +43,13 @@ public class bellande_internal_temperature_base_activity extends AppCompatActivi
         String apiAccessKey = (String) config.get("Bellande_Framework_Access_Key");
         this.connectivityPasscode = (String) config.get("connectivity_passcode");
 
-        bellande_internal_temperature_base_api cpuUsageApi = new Retrofit.Builder()
+        bellande_internal_temperature_api internalTemperatureApi = new Retrofit.Builder()
                 .baseUrl(apiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(bellande_internal_temperature_base_api.class);
+                .create(bellande_internal_temperature_api.class);
 
-        cpuUsageService = new bellande_internal_temperature_base_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, cpuUsageApi);
+        internalTemperatureService = new bellande_internal_temperature_service(apiUrl, inputEndpoint, outputEndpoint, apiAccessKey, internalTemperatureApi);
     }
 
     @SuppressLint("LongLogTag")
@@ -60,7 +60,7 @@ public class bellande_internal_temperature_base_activity extends AppCompatActivi
             Type type = new TypeToken<Map<String, Object>>(){}.getType();
             return new Gson().fromJson(reader, type);
         } catch (IOException e) {
-            Log.e("bellande_internal_temperature_base_activity", "Error reading config file: " + e.getMessage());
+            Log.e("bellande_internal_temperature_activity", "Error reading config file: " + e.getMessage());
         }
         return null;
     }
