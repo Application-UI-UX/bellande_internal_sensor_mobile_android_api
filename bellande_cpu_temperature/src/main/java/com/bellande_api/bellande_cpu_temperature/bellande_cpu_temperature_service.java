@@ -63,10 +63,10 @@ public class bellande_cpu_temperature_service {
             if (response.isSuccessful() && response.body() != null) {
                 return response.body().getStatus();
             } else {
-                throw new RuntimeException("Error sending CPU TEMPERATURE TEMPERATURE usage: " + response.code() + " - " + response.message());
+                throw new RuntimeException("Error sending CPU TEMPERATURE usage: " + response.code() + " - " + response.message());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error sending CPU TEMPERATURE TEMPERATURE usage: " + e.getMessage());
+            throw new RuntimeException("Error sending CPU TEMPERATURE usage: " + e.getMessage());
         }
     }
 }
