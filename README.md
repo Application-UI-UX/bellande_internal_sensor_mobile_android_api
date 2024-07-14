@@ -9,6 +9,18 @@
 - [![Organization Website](https://img.shields.io/badge/Explore%20Our-Website-0099cc?style=for-the-badge)](https://robotics-sensors.github.io)
 - Checkout our research organization for information, information on this repository is limited as well as all the configs are demos
 
+### Importing Package Into Your Application
+**settings.gradle**
+```
+maven { url 'https://jitpack.io' }
+```
+**Your Project Application build.gradle**
+```
+dependencies {
+    implementation 'com.github.Application-UI-UX:bellande_internal_sensor_mobile_ios_api:0.0.1'
+}
+```
+
 ### 🔑 API USE
 - Each Bellande APi has there unique endpoint
 - **Default Assess Key for Model**: ``bellande_web_api_opensource``
